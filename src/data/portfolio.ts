@@ -107,11 +107,11 @@ export const personalInfo = {
   name: "Kevin Ananda Putra",
   title: "Backend Developer",
   subtitle: "Go, JavaScript & Database Specialist",
-  description: "Undergraduate in Computer Science at Sebelas Maret University. Passionate about building robust backend systems, RESTful APIs, and full-stack web applications. Experienced in Go, JavaScript, and modern database technologies.",
+  description: "Undergraduate in Informatics at Sebelas Maret University. Passionate about building robust backend systems, RESTful APIs, and full-stack web applications. Experienced in Go, JavaScript, and modern database technologies.",
   location: "Indonesia",
   email: "kevinputraoffice@gmail.com",
   university: "Sebelas Maret University",
-  degree: "Computer Science",
+  degree: "Informatics",
   experience: "3+ years",
   projectsCompleted: "5+",
   technologiesMastered: "10+"
@@ -159,7 +159,7 @@ export const infoSections = [
   },
   {
     title: "Education", 
-    description: "Undergraduate in Computer Science at Sebelas Maret University",
+    description: "Undergraduate in Informatics at Sebelas Maret University",
     icon: "/assets/edu-icon.png",
     iconDark: "/assets/edu-icon-dark.png"
   },
