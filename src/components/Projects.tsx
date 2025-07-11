@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { ExternalLink, Github, Filter } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { projects, type Project } from '../data/portfolio';
+import { projects } from '../data/portfolio';
 
 const Projects: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'featured'>('all');
-  const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
 
   const handleFilterChange = (newFilter: 'all' | 'featured') => {
     setFilter(newFilter);
-    if (newFilter === 'all') {
-      setFilteredProjects(projects);
-    } else {
-      setFilteredProjects(projects.filter(project => project.featured));
-    }
   };
+
+  // Calculate filtered projects based on current filter
+  const filteredProjects = filter === 'all' 
+    ? projects 
+    : projects.filter(project => project.featured);
 
   return (
     <section id="projects" className="py-20 bg-gray-50 dark:bg-gray-800">
@@ -60,6 +59,7 @@ const Projects: React.FC = () => {
 
         {/* Projects Grid */}
         <motion.div 
+          key={filter} // Force re-render when filter changes
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           initial="hidden"
           whileInView="visible"
@@ -77,7 +77,7 @@ const Projects: React.FC = () => {
         >
           {filteredProjects.map((project) => (
             <motion.div
-              key={project.id}
+              key={`${filter}-${project.id}`} // Include filter in key for proper re-rendering
               className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
               variants={{
                 hidden: { y: 20, opacity: 0 },

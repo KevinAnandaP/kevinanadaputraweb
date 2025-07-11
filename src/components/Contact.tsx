@@ -128,21 +128,49 @@ const Contact: React.FC = () => {
       icon: <Mail className="w-6 h-6" />,
       title: "Email",
       value: personalInfo.email,
-      href: `mailto:${personalInfo.email}`
+      href: "#", // Remove mailto for now
+      copyable: true
     },
     {
       icon: <MapPin className="w-6 h-6" />,
       title: "Location",
       value: personalInfo.location,
-      href: "#"
-    },
-    {
-      icon: <Github className="w-6 h-6" />,
-      title: "University",
-      value: personalInfo.university,
-      href: "#"
+      href: "#",
+      copyable: false
     }
   ];
+
+  const copyToClipboard = async (text: string, type: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setNotification({
+        type: 'success',
+        message: `${type} copied to clipboard!`
+      });
+      setTimeout(() => setNotification({ type: null, message: '' }), 3000);
+    } catch {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setNotification({
+          type: 'success',
+          message: `${type} copied to clipboard!`
+        });
+        setTimeout(() => setNotification({ type: null, message: '' }), 3000);
+      } catch {
+        setNotification({
+          type: 'error',
+          message: 'Failed to copy to clipboard'
+        });
+        setTimeout(() => setNotification({ type: null, message: '' }), 3000);
+      }
+      document.body.removeChild(textArea);
+    }
+  };
 
   return (
     <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-800">
@@ -270,24 +298,78 @@ const Contact: React.FC = () => {
             {/* Contact Methods */}
             <div className="space-y-6">
               {contactInfo.map((info, index) => (
-                <a
+                <div
                   key={index}
-                  href={info.href}
-                  className="flex items-center space-x-4 p-4 bg-white dark:bg-gray-900 rounded-lg hover:shadow-md transition-shadow duration-200"
+                  className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg hover:shadow-md transition-shadow duration-200"
                 >
-                  <div className="flex-shrink-0 p-3 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-lg">
-                    {info.icon}
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0 p-3 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-lg">
+                      {info.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">
+                        {info.title}
+                      </h4>
+                      <p className="text-gray-600 dark:text-gray-300">
+                        {info.value}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">
-                      {info.title}
-                    </h4>
-                    <p className="text-gray-600 dark:text-gray-300">
-                      {info.value}
-                    </p>
-                  </div>
-                </a>
+                  {info.copyable && (
+                    <button
+                      onClick={() => copyToClipboard(info.value, info.title)}
+                      className="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-md hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-200"
+                    >
+                      Copy
+                    </button>
+                  )}
+                </div>
               ))}
+            </div>
+
+            {/* Alternative Contact Methods */}
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+              <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
+                Alternative Ways to Reach Me
+              </h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-300">Direct Email:</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-mono text-gray-900 dark:text-white">
+                      {personalInfo.email}
+                    </span>
+                    <button
+                      onClick={() => copyToClipboard(personalInfo.email, "Email")}
+                      className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-200"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-300">Open Gmail:</span>
+                  <a
+                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${personalInfo.email}&su=Project%20Inquiry`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1 text-xs bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors duration-200"
+                  >
+                    Gmail
+                  </a>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-300">Open Outlook:</span>
+                  <a
+                    href={`https://outlook.live.com/mail/0/deeplink/compose?to=${personalInfo.email}&subject=Project%20Inquiry`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-200"
+                  >
+                    Outlook
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Social Links */}
